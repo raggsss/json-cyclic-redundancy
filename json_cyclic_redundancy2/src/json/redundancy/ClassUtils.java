@@ -11,7 +11,8 @@ public class ClassUtils {
 
 	private static final Map<Class<?>, Class<?>> primitiveWrapperType = new HashMap(8);
 	private static final Map<Class<?>, Class<?>> otherType = new HashMap(2);
-	private static final DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+	private static final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	private static DateFormat requiredFormatter = new SimpleDateFormat("dd-MM-yyyy");
 	
 	static {
 		primitiveWrapperType.put(Boolean.class, Boolean.TYPE);
@@ -24,24 +25,32 @@ public class ClassUtils {
 	    primitiveWrapperType.put(Short.class, Short.TYPE);
 	}
 	
+	public static void setRequiredFormatter(String s) {
+		requiredFormatter = new SimpleDateFormat(s);
+	}
+	
 	public static boolean isPrimitiveWrapper(Class<?> clazz) {
 		return primitiveWrapperType.containsKey(clazz);
 	}
 	public static boolean isPrimitiveOrWrapper(Class<?> clazz) {
 		return (clazz.isPrimitive() || isPrimitiveWrapper(clazz));
-	}
+	}	
 	public static String getFormattedDate(Object o) {
 		
 		Date date = null;
-		
+		String requiredDate = null;
 		try {
-			date = formatter.parse(o.toString());
+			//System.out.println("here date : "+o.toString());
+			Date d = formatter.parse(o.toString());
+			date = requiredFormatter.parse(requiredFormatter.format(d));
+			//System.out.println(requiredFormatter.format(date));
+			requiredDate = requiredFormatter.format(date);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return date.toString();
+		return requiredDate;
 	}
 }
