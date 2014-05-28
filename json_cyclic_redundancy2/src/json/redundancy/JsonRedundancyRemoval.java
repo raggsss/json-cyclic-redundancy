@@ -4,13 +4,28 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import json.redundancy.ClassUtils;
+import json.redundancy.ClassUtil;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+/**
+ * A JsonRedundancyRemoval class is used to filter the list of cyclic
+ * redundant list, remove the repetitive data, and prepare json array
+ * from it. User can even prepare json of an object.
+ * Provided methods like isDateType and isStringType are used to check
+ * Date type and String type respectively.
+ *  
+ * @author Rahul V Shirsat
+ *
+ */
 public class JsonRedundancyRemoval {
 
+	/**
+	 * It prepares json of a list of all types of java objects
+	 * @param list
+	 * @return returns jsonarray
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONArray prepareJSON(List<?> list) {
 
@@ -32,14 +47,14 @@ public class JsonRedundancyRemoval {
 				try {
 					f0.setAccessible(true);
 
-					if (ClassUtils.isPrimitiveOrWrapper(f0.getType())
+					if (ClassUtil.isPrimitiveOrWrapper(f0.getType())
 							|| isStringType(f0.getType())) {
 						parent.put(f0.getName(), f0.get(o));
 						// System.out.println(o.getClass().getSimpleName() +
 						// " : " + f0.getName() + " : " + f0.get(o));
 					} else if (isDateType(f0.getType())) {
 						parent.put(f0.getName(),
-								ClassUtils.getFormattedDate(f0.get(o)));
+								ClassUtil.getFormattedDate(f0.get(o)));
 					} else {
 
 						JSONObject child1 = new JSONObject();
@@ -53,14 +68,14 @@ public class JsonRedundancyRemoval {
 						for (Field f1 : declaredFields1) {
 							// Level One object manipulation
 							f1.setAccessible(true);
-							if (ClassUtils.isPrimitiveOrWrapper(f1.getType())
+							if (ClassUtil.isPrimitiveOrWrapper(f1.getType())
 									|| isStringType(f1.getType())) {
 								child1.put(f1.getName(), f1.get(o1));
 								// System.out.println(o1.getClass().getSimpleName()
 								// + " : " + f1.getName() + " : " + f1.get(o1));
 							} else if (isDateType(f1.getType())) {
 								child1.put(f1.getName(),
-										ClassUtils.getFormattedDate(f1.get(o1)));
+										ClassUtil.getFormattedDate(f1.get(o1)));
 							} else if (f0.getType() != f1.getType()) {
 
 								Field[] declaredFields2 = f1.getType()
@@ -75,7 +90,7 @@ public class JsonRedundancyRemoval {
 								for (Field f2 : declaredFields2) {
 
 									f2.setAccessible(true);
-									if (ClassUtils.isPrimitiveOrWrapper(f2
+									if (ClassUtil.isPrimitiveOrWrapper(f2
 											.getType())
 											|| isStringType(f2.getType())) {
 										child2.put(f2.getName(), f2.get(o2));
@@ -83,7 +98,7 @@ public class JsonRedundancyRemoval {
 										// + " : " + f2.getName() + " : " +
 										// f2.get(o2));
 									} else if (isDateType(f2.getType())) {
-										child2.put(f2.getName(), ClassUtils
+										child2.put(f2.getName(), ClassUtil
 												.getFormattedDate(f2.get(o2)));
 									} else if (f1.getType() != f2.getType()) {
 
@@ -100,7 +115,7 @@ public class JsonRedundancyRemoval {
 										for (Field f3 : declaredFields3) {
 
 											f3.setAccessible(true);
-											if (ClassUtils
+											if (ClassUtil
 													.isPrimitiveOrWrapper(f3
 															.getType())
 													|| isStringType(f3
@@ -113,7 +128,7 @@ public class JsonRedundancyRemoval {
 											} else if (isDateType(f3.getType())) {
 												child3.put(
 														f3.getName(),
-														ClassUtils
+														ClassUtil
 																.getFormattedDate(f3
 																		.get(o3)));
 											}
@@ -142,6 +157,11 @@ public class JsonRedundancyRemoval {
 		return null;
 	}
 
+	/**
+	 * It prepares json of an object
+	 * @param o
+	 * @return jsonarray
+	 */
 	public JSONArray prepareJSON(Object o) {
 
 		List<Object> list = new ArrayList<Object>();
@@ -150,12 +170,22 @@ public class JsonRedundancyRemoval {
 		return prepareJSON(list);
 	}
 
+	/**
+	 * to check data type is of Date
+	 * @param type
+	 * @return boolean
+	 */
 	public static boolean isDateType(Class<?> type) {
 		if ("java.util.Date".equals(type.getName()))
 			return true;
 		return false;
 	}
 
+	/**
+	 * to check data type is of String
+	 * @param type
+	 * @return boolean
+	 */
 	public static boolean isStringType(Class<?> type) {
 		if ("java.lang.String".equals(type.getName()))
 			return true;

@@ -7,10 +7,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClassUtils {
+/**
+ * A ClassUtil is a utility class which is used to check data type of 
+ * a variable. It also provides to check primitiveWrapper data type.
+ * A provision of date format the user want is also provided with
+ * the method setRequiredFormatter method. User can set the date format he/she wants.
+ * getFormattedDate method is used to retrieve the date user has set the previously,
+ * otherwise by-default the format is dd-MM-yyyy.
+ * 
+ * @author Rahul V Shirsat
+ */
+public class ClassUtil {
 
 	private static final Map<Class<?>, Class<?>> primitiveWrapperType = new HashMap(8);
-	private static final Map<Class<?>, Class<?>> otherType = new HashMap(2);
+	//private static final Map<Class<?>, Class<?>> otherType = new HashMap(2);
 	private static final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	private static DateFormat requiredFormatter = new SimpleDateFormat("dd-MM-yyyy");
 	
@@ -25,16 +35,42 @@ public class ClassUtils {
 	    primitiveWrapperType.put(Short.class, Short.TYPE);
 	}
 	
+	/**
+	 * This method is used to set the date format 
+	 * @param s
+	 */
 	public static void setRequiredFormatter(String s) {
 		requiredFormatter = new SimpleDateFormat(s);
 	}
-	
+	/**
+	 * returns the date format
+	 * @return
+	 */
+	public static DateFormat getRequiredFormatter() {
+		return requiredFormatter;
+	}
+	/**
+	 * This method is used to check whether data type is primitive-wrapper
+	 * @param clazz
+	 * @return boolean type
+	 */
 	public static boolean isPrimitiveWrapper(Class<?> clazz) {
 		return primitiveWrapperType.containsKey(clazz);
 	}
+	/**
+	 * This method is used to check whether data type is
+	 * primitive-wrapper or only primitive 
+	 * @param clazz
+	 * @return boolean type
+	 */
 	public static boolean isPrimitiveOrWrapper(Class<?> clazz) {
 		return (clazz.isPrimitive() || isPrimitiveWrapper(clazz));
-	}	
+	}
+	/**
+	 * This method is used to get formatted date (by default format is dd-MM-yyyy)
+	 * @param o
+	 * @return formatted date
+	 */
 	public static String getFormattedDate(Object o) {
 		
 		Date date = null;
