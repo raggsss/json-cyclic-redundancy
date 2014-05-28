@@ -8,7 +8,7 @@ JSON CYCLIC REDUNDANCY REMOVAL PLUGIN.
 What Is This?
 -------------
 
-    This set of module is intended to remove cyclic redundancy in json array string object.
+        This set of module is intended to remove cyclic redundancy in json array string object.
     The modules strive to be simple, well documented and modification friendly, in order to help
     developers quickly learn their inner workings.
         This module is meant to teach you about code-level development for Java. Some solutions
